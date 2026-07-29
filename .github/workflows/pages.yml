@@ -25,7 +25,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # enablement schaltet Pages selbst frei, falls es noch nicht aktiv ist
       - uses: actions/configure-pages@v5
+        with:
+          enablement: true
 
       # Das Spiel ist statisch – das Repo wird unverändert veröffentlicht
       - uses: actions/upload-pages-artifact@v3
