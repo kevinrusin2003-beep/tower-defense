@@ -2,7 +2,7 @@
    CACHE_VERSION bei jeder Änderung an den Dateien hochzählen. */
 'use strict';
 
-const CACHE_VERSION = 'turm-verteidigung-v1';
+const CACHE_VERSION = 'turm-verteidigung-v2';
 const ASSETS = [
   './',
   './index.html',
