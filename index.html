@@ -2,8 +2,17 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
 <title>Turm-Verteidigung – Tower Defense</title>
+<meta name="description" content="Tower-Defense-Spiel mit acht Turmtypen, zwei Upgrade-Pfaden pro Turm und 20 Wellen."/>
+<link rel="manifest" href="manifest.webmanifest"/>
+<meta name="theme-color" content="#0b1220"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Turm-Verteidigung"/>
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png"/>
+<link rel="icon" href="icons/icon-192.png"/>
 <style>
 :root{
   --bg:#0b1220; --panel:#141d31; --panel-2:#1b2743; --line:#28365a;
@@ -154,9 +163,113 @@ canvas{
 .tp-sell:hover{ border-color:#fb7185; }
 .pt-ic canvas{ width:26px; height:26px; vertical-align:middle; }
 @media (max-width:700px){ .tw-popup{ width:min(94vw, 320px); } }
+
+/* ===================== Touch-Geräte: Vollbild im Querformat ===================== */
+#rotate{
+  display:none; position:fixed; inset:0; z-index:200;
+  background:var(--bg); color:var(--text);
+  flex-direction:column; align-items:center; justify-content:center; gap:14px;
+  text-align:center; padding:24px;
+}
+#rotate .rot-ic{ font-size:3.4rem; animation:rotHint 2.2s ease-in-out infinite; }
+#rotate b{ font-size:1.15rem; }
+#rotate span{ color:var(--muted); font-size:.9rem; max-width:280px; line-height:1.5; }
+@keyframes rotHint{
+  0%,45%{ transform:rotate(0deg); } 55%,100%{ transform:rotate(90deg); }
+}
+
+@media (pointer:coarse) and (orientation:portrait){
+  #rotate{ display:flex; }
+}
+
+@media (pointer:coarse) and (orientation:landscape){
+  html,body{ height:100%; overflow:hidden; overscroll-behavior:none; }
+  body{ position:fixed; inset:0; }
+
+  /* HUD schwebt über dem oberen Spielfeldrand statt eigener Zeile */
+  header{
+    position:absolute; z-index:15; top:0; left:0; right:0;
+    padding:4px 8px; gap:4px; border:0; background:none; backdrop-filter:none;
+    pointer-events:none;
+  }
+  header h1{ display:none; }
+  .stats{ gap:5px; margin:0; }
+  .chip{ padding:2px 8px; font-size:.72rem; gap:4px; background:rgba(11,18,32,.72); }
+
+  .wrap{
+    height:100%; max-width:none; gap:8px; padding:6px;
+    padding-left:max(6px, env(safe-area-inset-left));
+    padding-right:max(6px, env(safe-area-inset-right));
+    padding-bottom:max(6px, env(safe-area-inset-bottom));
+    flex-direction:row; align-items:stretch;
+  }
+  .board{
+    height:100%; min-height:0; display:flex;
+    align-items:center; justify-content:center;
+  }
+  canvas{
+    width:auto; height:auto; max-width:100%; max-height:100%;
+    border-radius:10px; box-shadow:none; touch-action:none; cursor:default;
+  }
+
+  /* Shop schrumpft und scrollt notfalls, die Steuerung bleibt immer sichtbar */
+  .sidebar{ width:182px; height:100%; gap:5px; overflow:hidden; }
+  .sidebar .panel{ padding:5px; border-radius:10px; }
+  .sidebar .panel-title{ display:none; }
+  .sidebar .hint, .sidebar #infoPanel{ display:none; }
+  .sidebar .panel:first-child{
+    flex:1 1 auto; min-height:0;
+    overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
+  }
+  .sidebar .controls{ flex:0 0 auto; }
+
+  .shop{ grid-template-columns:1fr 1fr; gap:3px; }
+  .shop-item{ padding:4px 2px; border-radius:9px; gap:0; }
+  .shop-item:hover{ transform:none; }
+  .s-cv{ width:27px; height:27px; }
+  .s-name{ font-size:.64rem; }
+  .s-cost{ font-size:.62rem; }
+
+  .controls .btn{ padding:6px 6px; font-size:.74rem; border-radius:8px; }
+  .controls .row{ gap:4px; margin-top:4px; }
+  .controls label.auto{ margin-top:5px; font-size:.64rem; gap:5px; }
+  .controls label.auto input{ margin:0; }
+
+  .toasts{ top:34px; }
+  .toast{ padding:5px 12px; font-size:.75rem; }
+  .overlay-card{ padding:16px 22px; max-width:min(88vw,380px); }
+  .overlay-card h2{ font-size:1.3rem; }
+  .overlay-card p{ font-size:.82rem; margin-bottom:12px; }
+
+  /* Kompakter, damit während der Welle möglichst wenig Spielfeld verdeckt wird */
+  .tw-popup{ width:min(78vw, 248px); padding:7px; font-size:.68rem; }
+  .tp-head{ margin-bottom:6px; }
+  .tp-head canvas{ width:26px; height:26px; }
+  .tp-stats{ font-size:.6rem; }
+  .tp-paths{ gap:6px; }
+  .tp-path{ padding:6px; gap:4px; }
+  .tp-pt{ font-size:.66rem; }
+  .tp-buy{ padding:6px; font-size:.62rem; }
+  .tp-buy b{ font-size:.66rem; }
+  .tp-sell{ margin-top:6px; padding:7px; font-size:.68rem; }
+}
+
+/* Breitere Geräte: Das Spielfeld ist höhenbegrenzt, rechts bleibt Platz übrig.
+   Drei Spalten sparen eine Shop-Reihe, ohne das Feld zu verkleinern. */
+@media (pointer:coarse) and (orientation:landscape) and (min-width:700px){
+  .sidebar{ width:228px; }
+  .shop{ grid-template-columns:repeat(3, 1fr); }
+  .s-cv{ width:30px; height:30px; }
+}
 </style>
 </head>
 <body>
+
+<div id="rotate">
+  <div class="rot-ic">📱</div>
+  <b>Bitte quer halten</b>
+  <span>Turm-Verteidigung wird im Querformat gespielt – dreh dein Gerät einmal zur Seite.</span>
+</div>
 
 <header>
   <h1>🏰 Turm-Verteidigung</h1>
@@ -456,7 +569,7 @@ function resetGame(){
     floaters: [], particles: [], spawnQueue: [], spawnTimer: 0,
     spawnInterval: 1, speed: (game && game.speed) || 1, paused: false,
     endless: false, autoDelay: 0, selectedShop: null, selectedTower: null,
-    hoverCell: null, time: 0, shake: 0, portalSpin: 0,
+    hoverCell: null, aimCell: null, time: 0, shake: 0, portalSpin: 0,
   };
   panelRefs = null;
   buildDecor();
@@ -1549,26 +1662,58 @@ function eventCell(e){
   const y = (e.clientY - rect.top) * (H / rect.height);
   return { x, y, gx: Math.floor(x / CELL), gy: Math.floor(y / CELL) };
 }
+const inBounds = (gx, gy) => gx >= 0 && gx < COLS && gy >= 0 && gy < ROWS;
+
 canvas.addEventListener('pointermove', e => {
   const c = eventCell(e);
-  game.hoverCell = (c.gx >= 0 && c.gx < COLS && c.gy >= 0 && c.gy < ROWS)
-    ? { gx: c.gx, gy: c.gy } : null;
+  game.hoverCell = inBounds(c.gx, c.gy) ? { gx: c.gx, gy: c.gy } : null;
+  // Finger auf dem Feld: Bau-Vorschau folgt mit, bleibt aber unbestätigt
+  if (e.pointerType === 'touch' && game.aimCell && game.hoverCell){
+    game.aimCell = c.gx + ',' + c.gy;
+  }
 });
-canvas.addEventListener('pointerleave', () => { game.hoverCell = null; });
+canvas.addEventListener('pointerleave', e => {
+  // Auf Touch bleibt die Vorschau stehen – der Finger verlässt das Feld nach jedem Tippen
+  if (e.pointerType !== 'touch') game.hoverCell = null;
+});
 canvas.addEventListener('pointerdown', e => {
   if (e.button !== 0) return;
   const c = eventCell(e);
-  handleBoardClick(c.gx, c.gy);
+  const touch = e.pointerType === 'touch';
+  if (touch) game.hoverCell = inBounds(c.gx, c.gy) ? { gx: c.gx, gy: c.gy } : null;
+  handleBoardClick(c.gx, c.gy, touch);
 });
 canvas.addEventListener('contextmenu', e => {
   e.preventDefault();
-  game.selectedShop = null;
-  game.selectedTower = null;
-  refreshShopSel();
-  renderPanel();
+  clearSelection();
 });
 
-function handleBoardClick(gx, gy){
+const isTouch = window.matchMedia('(pointer: coarse)').matches;
+let touchHintShown = false;
+
+function clearSelection(){
+  game.selectedShop = null;
+  game.selectedTower = null;
+  game.aimCell = null;
+  refreshShopSel();
+  renderPanel();
+}
+
+// Turm im Shop an-/abwählen (Klick wie Zifferntaste)
+function selectShop(key){
+  if (game.state === 'gameover' || game.state === 'won') return;
+  game.selectedShop = game.selectedShop === key ? null : key;
+  game.selectedTower = null;
+  game.aimCell = null;
+  if (game.selectedShop && isTouch && !touchHintShown){
+    touchHintShown = true;
+    toast('👆 Feld antippen, dann nochmal zum Bauen');
+  }
+  refreshShopSel();
+  renderPanel();
+}
+
+function handleBoardClick(gx, gy, touch){
   if (gx < 0 || gx >= COLS || gy < 0 || gy >= ROWS) return;
   if (game.state === 'gameover' || game.state === 'won') return;
   const key = gx + ',' + gy;
@@ -1576,11 +1721,21 @@ function handleBoardClick(gx, gy){
   if (t){
     game.selectedTower = t;
     game.selectedShop = null;
+    game.aimCell = null;
     refreshShopSel();
     renderPanel();
     return;
   }
-  if (game.selectedShop){ tryPlace(game.selectedShop, gx, gy); return; }
+  if (game.selectedShop){
+    // Touch hat kein Hover: erst tippen zeigt die Vorschau, zweites Tippen baut
+    if (touch && game.aimCell !== key){
+      game.aimCell = key;
+      return;
+    }
+    game.aimCell = null;
+    tryPlace(game.selectedShop, gx, gy);
+    return;
+  }
   if (game.selectedTower){ game.selectedTower = null; renderPanel(); }
 }
 
@@ -1588,13 +1743,7 @@ document.addEventListener('keydown', e => {
   if (!game) return;
   const tag = e.target && e.target.tagName;
   if (e.code === 'Space' && (tag === 'BUTTON' || tag === 'INPUT')) return;
-  if (e.key === 'Escape'){
-    game.selectedShop = null;
-    game.selectedTower = null;
-    refreshShopSel();
-    renderPanel();
-    return;
-  }
+  if (e.key === 'Escape'){ clearSelection(); return; }
   if (e.code === 'Space'){
     e.preventDefault();
     if (game.state === 'idle') startWave();
@@ -1608,13 +1757,7 @@ document.addEventListener('keydown', e => {
     return;
   }
   const idx = ['1', '2', '3', '4', '5', '6', '7', '8'].indexOf(e.key);
-  if (idx >= 0 && game.state !== 'gameover' && game.state !== 'won'){
-    const keys = Object.keys(TOWER_TYPES);
-    game.selectedShop = game.selectedShop === keys[idx] ? null : keys[idx];
-    game.selectedTower = null;
-    refreshShopSel();
-    renderPanel();
-  }
+  if (idx >= 0) selectShop(Object.keys(TOWER_TYPES)[idx]);
 });
 
 /* ========================= Shop, Panel & UI ========================= */
@@ -1637,13 +1780,7 @@ function buildShop(){
     co.className = 's-cost';
     co.textContent = '🪙 ' + def.cost;
     el.appendChild(co);
-    el.addEventListener('click', () => {
-      if (game.state === 'gameover' || game.state === 'won') return;
-      game.selectedShop = game.selectedShop === key ? null : key;
-      game.selectedTower = null;
-      refreshShopSel();
-      renderPanel();
-    });
+    el.addEventListener('click', () => selectShop(key));
     ui.shop.appendChild(el);
   }
 }
@@ -2082,6 +2219,14 @@ function drawGhost(){
     ctx.moveTo(-10, -10); ctx.lineTo(10, 10);
     ctx.moveTo(10, -10); ctx.lineTo(-10, 10);
     ctx.stroke();
+  } else if (game.aimCell === key){
+    // Touch: Ziel ist angetippt, nochmal tippen baut
+    const pu = 0.5 + Math.sin(game.portalSpin * 5) * 0.5;
+    ctx.strokeStyle = 'rgba(255,255,255,' + (0.45 + pu * 0.5) + ')';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.arc(0, 0, 21 + pu * 3, 0, TAU);
+    ctx.stroke();
   }
   ctx.restore();
 }
@@ -2188,6 +2333,22 @@ function frame(now){
   }
   render();
   requestAnimationFrame(frame);
+}
+
+/* ========================= Gerätedrehung & Installation ========================= */
+// Nach dem Drehen stimmt die Popup-Position nicht mehr – lieber schließen
+window.addEventListener('orientationchange', () => {
+  if (game && game.selectedTower){
+    game.selectedTower = null;
+    renderPanel();
+  }
+});
+
+// Offline-Betrieb der installierten App; unter file:// nicht verfügbar
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')){
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
 }
 
 buildShop();
