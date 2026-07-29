@@ -1,8 +1,8 @@
 # Turm-Verteidigung
 
 Ein Tower-Defense-Spiel im Browser – reines HTML5-Canvas ohne Frameworks, alles in einer
-Datei. Läuft am Rechner mit Maus und Tastatur und auf dem iPhone/iPad im Querformat,
-wo es sich als App auf den Home-Bildschirm legen lässt.
+Datei. Läuft am Rechner mit Maus und Tastatur und auf dem iPhone/iPad, wo es sich als App
+auf den Home-Bildschirm legen lässt.
 
 ## Spielen
 
@@ -16,13 +16,15 @@ wo es sich als App auf den Home-Bildschirm legen lässt.
    funktioniert auch ohne Internet.
 
 Safari ist Pflicht: Chrome und Firefox auf iOS können nichts zum Home-Bildschirm hinzufügen.
-Das Spiel wird im **Querformat** gespielt; im Hochformat erscheint ein Hinweis zum Drehen.
+
+Das Spiel läuft immer im **Querformat**. Wird das Gerät hochkant gehalten, dreht sich die
+Darstellung selbst mit – es gibt keinen Hinweis zum Wegtippen, man hält das Gerät einfach quer.
 
 ## Steuerung
 
 | | Rechner | Touch |
 |---|---|---|
-| Turm wählen | Taste `1`–`8` oder Klick im Shop | Antippen im Shop |
+| Turm wählen | Taste `1`–`9` und `0` oder Klick im Shop | Antippen im Shop |
 | Turm bauen | Klick auf ein freies Feld | Feld antippen, dann **nochmal** tippen zum Bestätigen |
 | Upgrade / Verkauf | Klick auf einen gebauten Turm | Gebauten Turm antippen |
 | Auswahl abbrechen | Rechtsklick oder `ESC` | Anderen Turm im Shop wählen |
@@ -34,13 +36,20 @@ Tipp zeigt Reichweite und Bauplatz als Vorschau, der zweite baut.
 
 ## Spielprinzip
 
-- **Acht Turmtypen**: Kanone, MG-Turm, Sniper, Frost, Blitz, Rakete, Flammen, Goldmine.
+- **Elf Turmtypen**: Kanone, MG-Turm, Sniper, Frost, Blitz, Rakete, Flammen und Goldmine für
+  den Alltag, dazu Prisma, Mörser und Titan als teure Türme fürs späte Spiel. Der Prisma-Turm
+  schießt einen Strahl, der mehrere Gegner hintereinander durchschlägt; der Titan trifft eine
+  Kette aus fünf Gegnern gleichzeitig. Die Tastenkürzel decken die ersten zehn ab, der Titan
+  lässt sich nur im Shop anklicken.
 - **Zwei Upgrade-Pfade pro Turm** mit je drei Stufen. Sobald ein Pfad Stufe 2 erreicht,
   ist der andere bei Stufe 1 gesperrt – man muss sich also festlegen.
-- **Gegner in vier Stufen** („Sahur"): Getroffene Gegner zerplatzen in die nächstkleinere
+- **Gegner in vier Stufen** („Sahul"): Getroffene Gegner zerplatzen in die nächstkleinere
   Stufe, statt einfach zu verschwinden.
 - **20 Wellen**, danach lässt sich endlos weiterspielen.
 - Die **Goldmine** schießt nicht, sondern zahlt Gold aus, solange eine Welle läuft.
+- Gold ist knapp gehalten: Über 20 Wellen kommen rund 11.900 Gold zusammen, ein starker
+  Endausbau kostet etwa genauso viel. Man kann also nicht alles bauen und muss sich
+  entscheiden, worin man investiert.
 
 ## Veröffentlichen (GitHub Pages)
 
